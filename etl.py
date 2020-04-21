@@ -9,6 +9,7 @@ config.read('dl.cfg')
 os.environ['AWS_ACCESS_KEY_ID'] = config['AWS']['AWS_ACCESS_KEY_ID']
 os.environ['AWS_SECRET_ACCESS_KEY'] = config['AWS']['AWS_SECRET_ACCESS_KEY']
 
+# query used for the start_time table (get info from timestamp)
 time_query = """
     SELECT DISTINCT timestamp as start_time, 
             hour(timestamp) as hour, 
@@ -20,17 +21,22 @@ time_query = """
         FROM STAGING_EVENTS
 """
 
+# query used fin order to add the field  timestamp to the staging_events table
 log_filter_query = """
     SELECT *, CAST(ts/1000 as Timestamp) as timestamp 
     FROM STAGING_EVENTS 
     WHERE page = 'NextSong'
 """
 
-""" Create the spark Session
-"""
-
 
 def create_spark_session():
+    """ Draws a list of strings to an image
+
+    Arguments:
+        None
+    Returns:
+        spark session
+    """
     spark = SparkSession \
         .builder \
         .config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:2.7.0") \
@@ -38,11 +44,18 @@ def create_spark_session():
     return spark
 
 
-""" Process the data song
-"""
-
-
 def process_song_data(spark, input_data, output_data):
+    """ Process the data song (input_data) and saves the result to output_data
+        on parquet format
+
+    Arguments:
+        spark {spark session}: Spark session aws hadoop
+        input_data {string}: Path where the source files are located
+        output_data {string}: Path to save the results
+    Returns:
+        None
+    """
+
     # get filepath to song data file
     song_data = input_data + 'song-data/*/*/*/*.json'
 
@@ -73,11 +86,18 @@ def process_song_data(spark, input_data, output_data):
     artists_table.write.parquet(output_data + 'artists.parquet', mode='overwrite')
 
 
-""" Process the log data
-"""
-
-
 def process_log_data(spark, input_data, output_data):
+    """ Process the log data (input_data) and saves the result to output_data
+        on parquet format
+
+    Arguments:
+        spark {spark session}: Spark session aws hadoop
+        input_data {string}: Path where the source files are located
+        output_data {string}: Path to save the results
+    Returns:
+        None
+    """
+
     # get filepath to log data file
     log_data = input_data + 'log_data/*/*/*.json'
 

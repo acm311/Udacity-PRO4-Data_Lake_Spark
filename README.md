@@ -4,6 +4,7 @@ This is the third project for the Data Engineering Nanodegree, in which we put i
 - Data warehouse
 - PySpark
 - Data Lake
+- AWS
 
 ### Introduction
 
@@ -17,6 +18,18 @@ You'll be able to test your database and ETL pipeline by running queries given t
 ### Project Description
 
  In this project, you'll apply what you've learned on Spark and data lakes to build an ETL pipeline for a data lake hosted on S3. To complete the project, you will need to load data from S3, process the data into analytics tables using Spark, and load them back into S3. You'll deploy this Spark process on a cluster using AWS.
+
+
+### Project Files
+
+**etl.py**
+
+Script that get the song & log data from an S3 bucket, transform the data according the database schema and then load the info back to s3  in a parquet format.
+
+**dl.cfg**
+
+AWS keys
+
 
 ### Database Schema
 In order to response to the business needs we're using a star schema, that gives to us the advantage to use simply queries and joins and do fast aggregations... way to do analytics!
